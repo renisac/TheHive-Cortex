@@ -1,0 +1,6 @@
+[submodule "code/cifv3_responder"]
+	path = code/cifv3_responder
+	url = https://github.com/ckrez/cifv3_responder.git
+[submodule "code/responders/cifv3_responder"]
+	path = code/responders/cifv3_responder
+	url = https://github.com/ckrez/cifv3_responder.git
