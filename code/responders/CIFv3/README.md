@@ -26,7 +26,7 @@ The following need to be configured under **Organization --> Responders** prior 
 
 `confidence` - **Required** - Default indicator confidence (can be overriden by custom tags per observable)
 
-`group` - **Required** - Group to assign newly created indicators in CIF (Default is `everyone`, can specify multiple groups which will create a unique submission for each group)
+`group` - **Required** - Group to assign newly created indicators in CIF (Default is `everyone`, can specify multiple groups which will create a unique submission for each group. CIF Token must have write access to all groups)
 
 `tlp_map` - JSON object to map TheHive TLP to a custom value (Optional)
 
