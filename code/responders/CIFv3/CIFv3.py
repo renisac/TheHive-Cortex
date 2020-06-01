@@ -67,7 +67,8 @@ class CIFv3(Responder):
         # setup tracking vars
         success_submitted = 0
         expected_submitted = len(indicators) * len(self.group_list)
-
+        error_list = []
+        
         for i in indicators:
 
             # map TLP to word
@@ -119,9 +120,14 @@ class CIFv3(Responder):
                     _ = cli.indicators_create(ii_obj)
                     success_submitted += 1
                 except Exception as e:
-                    self.error("CIF submission error: {}".format(e))
+                    error_list.append("CIF submission error for indicator {}: {}".format(ii_obj, e))
 
-        self.report({'message': '{} indicator(s) submitted to CIFv3 out of {}'.format(success_submitted, expected_submitted)})
+        if error_list:
+            self.error('{} indicator(s) submitted to CIF out of {}. Errors: {}'.format(success_submitted, 
+                expected_submitted, error_list
+                ))
+        else:
+            self.report({'message': '{} indicator(s) submitted to CIF out of {}'.format(success_submitted, expected_submitted)})
 
     def operations(self, raw):
         return [self.build_operation('AddTagToArtifact', tag='cifv3:submitted')]

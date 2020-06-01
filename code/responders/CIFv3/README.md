@@ -30,7 +30,7 @@ The following need to be configured under **Organization --> Responders** prior 
 
 `tlp_map` - JSON object to map TheHive TLP to a custom value (Optional)
 
-Any tags on an observable without a colon (:) in them are added as tags to the submitted indicator. 
+Any tags on an observable without a colon (:) in them are added as tags to the submitted indicator.
 E.g., an indicator tagged in TheHive as `confidence:8`, `malware`, `threat` would be given `malware` and `threat` as CIF tags
 upon submission as well as have its confidence set = 8.
 
