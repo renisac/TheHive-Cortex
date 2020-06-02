@@ -63,7 +63,12 @@ class CIFv3(Responder):
                     a['lasttime'] = self.get_param('data.updatedAt')
                 indicators.append(a)
         
-        cli = Client(token=self.token, remote=self.remote, verify_ssl=self.verify_ssl)
+        # instantiate CIF client
+        try:
+            cli = Client(token=self.token, remote=self.remote, verify_ssl=self.verify_ssl)
+        except Exception as e:
+            self.error('Unable to establish CIF client: {}'.format(e))
+
         # setup tracking vars
         success_submitted = 0
         expected_submitted = len(indicators) * len(self.group_list)
