@@ -40,7 +40,7 @@
 		"required": true,
 		"defaultValue": true
 	  },
-      {
+          {
 		"name": "sandbox",
 		"description": "Submit ONLY to the APWG Sandbox (for testing responder). Change to False to enable sending to APWG production API",
 		"type": "boolean",
