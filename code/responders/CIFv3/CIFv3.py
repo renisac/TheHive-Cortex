@@ -16,7 +16,7 @@ class CIFv3(Responder):
         self.token = self.get_param('config.token', None, 'Missing CIF token')
         self.d_confidence = self.get_param('config.confidence')
         self.verify_ssl = self.get_param('config.verify_ssl')
-        self.group = self.get_param('config.group')
+        self.group_list = self.get_param('config.group')
         self.custom_tlp_map = self.get_param('config.tlp_map')
 
         self.TLP_MAP = {
@@ -62,7 +62,18 @@ class CIFv3(Responder):
                 if self.get_param('data.updatedAt'):
                     a['lasttime'] = self.get_param('data.updatedAt')
                 indicators.append(a)
+        
+        # instantiate CIF client
+        try:
+            cli = Client(token=self.token, remote=self.remote, verify_ssl=self.verify_ssl)
+        except Exception as e:
+            self.error('Unable to establish CIF client: {}'.format(e))
 
+        # setup tracking vars
+        success_submitted = 0
+        expected_submitted = len(indicators) * len(self.group_list)
+        error_list = []
+        
         for i in indicators:
 
             # map TLP to word
@@ -94,27 +105,34 @@ class CIFv3(Responder):
                 'description': i['desc'],
                 'tags': tags,
                 'tlp': tlp,
-                'group': self.group,
                 'lasttime': lasttime
             }
 
-            # create indicator object
-            try:
-                ii = Indicator(**ii)
-            except InvalidIndicator as e:
-                self.error("Invalid CIF indicator {}".format(e))
-            except Exception as e:
-                self.error("CIF indicator error: {}".format(e))
+            # handle multiple submissions, one per group
+            for group in self.group_list:
+                ii['group'] = group
 
-            # submit indicator
-            cli = Client(token=self.token, remote=self.remote, verify_ssl=self.verify_ssl)
+                # create indicator object
+                try:
+                    ii_obj = Indicator(**ii)
+                except InvalidIndicator as e:
+                    self.error("Invalid CIF indicator {}".format(e))
+                except Exception as e:
+                    self.error("CIF indicator error: {}".format(e))
 
-            try:
-                r = cli.indicators_create(ii)
-            except Exception as e:
-                self.error("CIF submission error: {}".format(e))
+                # submit indicator
+                try:
+                    _ = cli.indicators_create(ii_obj)
+                    success_submitted += 1
+                except Exception as e:
+                    error_list.append("CIF submission error for indicator {}: {}".format(ii_obj, e))
 
-        self.report({'message': '{} indicator(s) submitted to CIFv3'.format(len(indicators))})
+        if error_list:
+            self.error('{} indicator(s) submitted to CIF out of {}. Errors: {}'.format(success_submitted, 
+                expected_submitted, error_list
+                ))
+        else:
+            self.report({'message': '{} indicator(s) submitted to CIF out of {}'.format(success_submitted, expected_submitted)})
 
     def operations(self, raw):
         return [self.build_operation('AddTagToArtifact', tag='cifv3:submitted')]
