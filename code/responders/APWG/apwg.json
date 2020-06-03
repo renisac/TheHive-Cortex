@@ -18,7 +18,7 @@
         },
         {
         "name": "confidence",
-        "description": "Default indicator confidence",
+        "description": "Default indicator confidence (set to 50, 90, or 100)",
         "type": "number",
         "multi": false,
         "required": true,
