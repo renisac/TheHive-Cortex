@@ -1,0 +1,52 @@
+{
+    "name": "APWG",
+    "version": "0.1",
+    "author": "Michael Davis",
+    "url": "https://github.com/renisac/TheHive-Cortex/tree/master/code/responders/APWG",
+    "license": "AGPL-V3",
+    "description": "Submit indicators to APWG",
+    "dataTypeList": ["thehive:alert","thehive:case_artifact"],
+    "command": "APWG/apwg.py",
+    "baseConfig": "apwg",
+    "configurationItems": [
+        {
+        "name": "token",
+        "description": "APWG API Token",
+        "type": "string",
+        "multi": false,
+        "required": true
+        },
+        {
+        "name": "confidence",
+        "description": "Default indicator confidence",
+        "type": "number",
+        "multi": false,
+        "required": true,
+        "defaultValue": 50
+        },
+        {
+        "name": "endpoint_phish",
+        "description": "Submit to APWG /phish API endpoint (URLs)",
+        "type": "boolean",
+        "multi": false,
+        "required": true,
+        "defaultValue": true
+        },
+        {
+        "name": "endpoint_mal_ip",
+        "description": "Submit to APWG /mal_ip API endpoint (IPs)",
+        "type": "boolean",
+        "multi": false,
+        "required": true,
+        "defaultValue": true
+        },
+        {
+        "name": "sandbox",
+        "description": "Submit ONLY to the APWG Sandbox (for testing responder). Change to False to enable sending to APWG production API",
+        "type": "boolean",
+        "multi": false,
+        "required": true,
+        "defaultValue": true
+        }
+    ]
+}
