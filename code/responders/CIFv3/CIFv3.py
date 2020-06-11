@@ -48,6 +48,8 @@ class CIFv3(Responder):
             a['tlp'] = self.get_param('data.tlp', None)
             a['desc'] = self.get_param('data.message', None)
             a['lasttime'] = self.get_param('data.createdAt', None)
+            if self.get_param('data.updatedAt'):
+                    a['lasttime'] = self.get_param('data.updatedAt')
             indicators.append(a)
 
         # alert details
